@@ -1220,7 +1220,7 @@
                 }
                 widget.show();
                 place();
-//                widget.show();
+                // widget.show();
 
                 if (options.focusOnShow && !input.is(':focus')) {
                     input.focus();
