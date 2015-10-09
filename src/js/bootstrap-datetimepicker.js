@@ -217,22 +217,22 @@
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate)
                             .append($('<tbody>'))
-                            ),
+                            )[0],
                     $('<div>').addClass('datepicker-months')
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate.clone())
                             .append(contTemplate.clone())
-                            ),
+                            )[0],
                     $('<div>').addClass('datepicker-years')
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate.clone())
                             .append(contTemplate.clone())
-                            ),
+                            )[0],
                     $('<div>').addClass('datepicker-decades')
                         .append($('<table>').addClass('table-condensed')
                             .append(headTemplate.clone())
                             .append(contTemplate.clone())
-                            )
+                            )[0]
                 ];
             },
 
@@ -291,7 +291,7 @@
 
                 return $('<div>').addClass('timepicker-picker')
                     .append($('<table>').addClass('table-condensed')
-                        .append([topRow, middleRow, bottomRow]));
+                        .append([topRow[0], middleRow[0], bottomRow[0]]));
             },
 
             getTimePickerTemplate = function () {
@@ -301,16 +301,16 @@
                         .append($('<table>').addClass('table-condensed')),
                     secondsView = $('<div>').addClass('timepicker-seconds')
                         .append($('<table>').addClass('table-condensed')),
-                    ret = [getTimePickerMainTemplate()];
+                    ret = [getTimePickerMainTemplate()[0]];
 
                 if (isEnabled('h')) {
-                    ret.push(hoursView);
+                    ret.push(hoursView[0]);
                 }
                 if (isEnabled('m')) {
-                    ret.push(minutesView);
+                    ret.push(minutesView[0]);
                 }
                 if (isEnabled('s')) {
-                    ret.push(secondsView);
+                    ret.push(secondsView[0]);
                 }
 
                 return ret;
@@ -319,16 +319,16 @@
             getToolbar = function () {
                 var row = [];
                 if (options.showTodayButton) {
-                    row.push($('<td>').append($('<a>').attr({'data-action':'today', 'title': options.tooltips.today}).append($('<span>').addClass(options.icons.today))));
+                    row.push($('<td>').append($('<a>').attr({'data-action':'today', 'title': options.tooltips.today}).append($('<span>').addClass(options.icons.today)))[0]);
                 }
                 if (!options.sideBySide && hasDate() && hasTime()) {
-                    row.push($('<td>').append($('<a>').attr({'data-action':'togglePicker', 'title': options.tooltips.selectTime}).append($('<span>').addClass(options.icons.time))));
+                    row.push($('<td>').append($('<a>').attr({'data-action':'togglePicker', 'title': options.tooltips.selectTime}).append($('<span>').addClass(options.icons.time)))[0]);
                 }
                 if (options.showClear) {
-                    row.push($('<td>').append($('<a>').attr({'data-action':'clear', 'title': options.tooltips.clear}).append($('<span>').addClass(options.icons.clear))));
+                    row.push($('<td>').append($('<a>').attr({'data-action':'clear', 'title': options.tooltips.clear}).append($('<span>').addClass(options.icons.clear)))[0]);
                 }
                 if (options.showClose) {
-                    row.push($('<td>').append($('<a>').attr({'data-action':'close', 'title': options.tooltips.close}).append($('<span>').addClass(options.icons.close))));
+                    row.push($('<td>').append($('<a>').attr({'data-action':'close', 'title': options.tooltips.close}).append($('<span>').addClass(options.icons.close)))[0]);
                 }
                 return $('<table>').addClass('table-condensed').append($('<tbody>').append($('<tr>').append(row)));
             },
@@ -381,6 +381,9 @@
                 }
                 if (options.toolbarPlacement === 'bottom') {
                     content.append(toolbar);
+                }
+                if (!options.showHeader) {
+                    dateView.find('thead').remove();
                 }
                 return template.append(content);
             },
@@ -471,6 +474,7 @@
                 }
 
                 widget.css({
+                    display: 'block',
                     top: vertical === 'top' ? 'auto' : position.top + element.outerHeight(),
                     bottom: vertical === 'top' ? position.top + element.outerHeight() : 'auto',
                     left: horizontal === 'left' ? (parent === element ? 0 : position.left) : 'auto',
@@ -581,7 +585,7 @@
                 var spans = [],
                     monthsShort = viewDate.clone().startOf('y').startOf('d');
                 while (monthsShort.isSame(viewDate, 'y')) {
-                    spans.push($('<span>').attr('data-action', 'selectMonth').addClass('month').text(monthsShort.format('MMM')));
+                    spans.push($('<span>').attr('data-action', 'selectMonth').addClass('month').text(monthsShort.format('MMM'))[0]);
                     monthsShort.add(1, 'M');
                 }
                 widget.find('.datepicker-months td').empty().append(spans);
@@ -720,7 +724,7 @@
                         if (options.calendarWeeks) {
                             row.append('<td class="cw">' + currentDate.week() + '</td>');
                         }
-                        html.push(row);
+                        html.push(row[0]);
                     }
                     clsName = '';
                     if (currentDate.isBefore(viewDate, 'M')) {
@@ -766,7 +770,7 @@
                 while (currentHour.isSame(viewDate, 'd') && (use24Hours || (viewDate.hour() < 12 && currentHour.hour() < 12) || viewDate.hour() > 11)) {
                     if (currentHour.hour() % 4 === 0) {
                         row = $('<tr>');
-                        html.push(row);
+                        html.push(row[0]);
                     }
                     row.append('<td data-action="selectHour" class="hour' + (!isValid(currentHour, 'h') ? ' disabled' : '') + '">' + currentHour.format(use24Hours ? 'HH' : 'hh') + '</td>');
                     currentHour.add(1, 'h');
@@ -784,7 +788,7 @@
                 while (viewDate.isSame(currentMinute, 'h')) {
                     if (currentMinute.minute() % (step * 4) === 0) {
                         row = $('<tr>');
-                        html.push(row);
+                        html.push(row[0]);
                     }
                     row.append('<td data-action="selectMinute" class="minute' + (!isValid(currentMinute, 'm') ? ' disabled' : '') + '">' + currentMinute.format('mm') + '</td>');
                     currentMinute.add(step, 'm');
@@ -801,7 +805,7 @@
                 while (viewDate.isSame(currentSecond, 'm')) {
                     if (currentSecond.second() % 20 === 0) {
                         row = $('<tr>');
-                        html.push(row);
+                        html.push(row[0]);
                     }
                     row.append('<td data-action="selectSecond" class="second' + (!isValid(currentSecond, 's') ? ' disabled' : '') + '">' + currentSecond.format('ss') + '</td>');
                     currentSecond.add(5, 's');
@@ -1216,6 +1220,7 @@
                 }
                 widget.show();
                 place();
+//                widget.show();
 
                 if (options.focusOnShow && !input.is(':focus')) {
                     input.focus();
@@ -2297,6 +2302,18 @@
             return picker;
         };
 
+        picker.showHeader = function (showHeader) {
+            if (arguments.length === 0) {
+                return options.showHeader;
+            }
+
+            if (typeof showHeader !== 'boolean') {
+                throw new TypeError('showHeader() expects a boolean parameter');
+            }
+            options.showHeader = showHeader;
+            return picker;
+        };
+
         // initializing element and component attributes
         if (element.is('input')) {
             input = element;
@@ -2547,6 +2564,7 @@
         disabledTimeIntervals: false,
         disabledHours: false,
         enabledHours: false,
-        viewDate: false
+        viewDate: false,
+        showHeader: true
     };
 }));
